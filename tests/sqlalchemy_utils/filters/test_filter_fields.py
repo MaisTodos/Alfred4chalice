@@ -1,4 +1,5 @@
 import datetime
+from datetime import date, timedelta
 
 from marshmallow import fields
 
@@ -11,6 +12,7 @@ from alfred.sqlalchemy_utils.filters.fields import (
     ListFilterField,
     LogicalFilterField,
     StringFilterField,
+    TimePeriodFilterField,
 )
 
 
@@ -151,5 +153,24 @@ def test_boolean_filter_field_type():
         "field_name": "is_active",
         "op": "==",
         "value": True,
+        "filter_type": "sqlalchemy.and_",
+    }
+
+
+def test_time_period_filter_field_is_subclass():
+    assert issubclass(TimePeriodFilterField, FilterFieldMixin)
+    assert issubclass(TimePeriodFilterField, fields.Integer)
+
+
+def test_time_period_filter_field_type():
+    field = TimePeriodFilterField(model=BasicAuthUser)
+    time_period = 7
+    value = field._deserialize(time_period, "time_period", {"time_period": time_period})
+
+    assert value == {
+        "model": BasicAuthUser,
+        "field_name": "time_period",
+        "op": ">=",
+        "value": date.today() - timedelta(days=time_period),
         "filter_type": "sqlalchemy.and_",
     }
