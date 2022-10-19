@@ -1,3 +1,5 @@
+from datetime import date, timedelta
+
 from marshmallow import fields
 
 
@@ -48,3 +50,18 @@ class LogicalFilterField(ListFilterField):
 
 class BooleanFilterField(FilterFieldMixin, fields.Boolean):
     pass
+
+
+class TimePeriodFilterField(FilterFieldMixin, fields.Integer):
+    def _deserialize(self, value, attr, data, **kwargs):
+        data = super()._deserialize(value, attr, data, **kwargs)
+
+        today = date.today()
+        time_period_start = today - timedelta(days=data["value"])
+
+        data["value"] = time_period_start
+
+        return data
+
+    def __init__(self, model, field_name=None, *args, **kwargs):
+        super().__init__(model, ">=", field_name, *args, **kwargs)
