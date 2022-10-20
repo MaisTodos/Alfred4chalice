@@ -56,12 +56,14 @@ class TimePeriodFilterField(FilterFieldMixin, fields.Integer):
     def _deserialize(self, value, attr, data, **kwargs):
         data = super()._deserialize(value, attr, data, **kwargs)
 
+        time_period = data["value"]
         today = date.today()
-        time_period_start = today - timedelta(days=data["value"])
+        time_period_start_date = today - timedelta(days=time_period)
 
-        data["value"] = time_period_start
+        data["value"] = time_period_start_date
 
         return data
 
     def __init__(self, model, field_name=None, *args, **kwargs):
-        super().__init__(model, ">=", field_name, *args, **kwargs)
+        op_bigger_or_equal = ">="
+        super().__init__(model, op_bigger_or_equal, field_name, *args, **kwargs)
