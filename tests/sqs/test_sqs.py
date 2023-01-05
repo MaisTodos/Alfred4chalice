@@ -46,6 +46,11 @@ def foobar(param_a, param_b):
     return "bar"
 
 
+@SQSTask(queue_url="fake_url.fifo", message_group_id="fake_message_group_id")
+def fifo_example(param_a, param_b):
+    return "bar"
+
+
 def test_sqs_task_init():
     assert foo.bind is True
     assert foo.retries == 0
@@ -130,6 +135,26 @@ def test_apply_async_with_queue_url(mock_sqs_client):
                 "retries": 0,
             }
         ),
+    )
+    assert response == mock_sqs_client.send_message.return_value["MessageId"]
+
+
+@patch("alfred.sqs.sqs.sqs_client")
+def test_apply_async_with_message_group_id(mock_sqs_client):
+    response = fifo_example.apply_async(args=["fubar"], kwargs={"param_b": 10})
+
+    mock_sqs_client.send_message.assert_called_once_with(
+        QueueUrl=fifo_example.queue_url,
+        MessageBody=json.dumps(
+            {
+                "_func_module": fifo_example.func.__module__,
+                "_func_name": fifo_example.func.__name__,
+                "args": ["fubar"],
+                "kwargs": {"param_b": 10},
+                "retries": 0,
+            }
+        ),
+        MessageGroupId="fake_message_group_id",
     )
     assert response == mock_sqs_client.send_message.return_value["MessageId"]
 
