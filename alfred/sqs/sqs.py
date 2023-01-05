@@ -57,21 +57,18 @@ class SQSTask:
             "retries": self.retries,
         }
 
-        queue_url = queue_url or self.queue_url
-        try:
-            if not self.message_group_id:
-                response = sqs_client.send_message(
-                    QueueUrl=queue_url,
-                    DelaySeconds=countdown,
-                    MessageBody=json.dumps(body),
-                )
-            else:
-                response = sqs_client.send_message(
-                    QueueUrl=queue_url,
-                    MessageBody=json.dumps(body),
-                    MessageGroupId=self.message_group_id,
-                )
+        message_params = {
+            "QueueUrl": queue_url or self.queue_url,
+            "MessageBody": json.dumps(body),
+        }
 
+        if not self.message_group_id:
+            message_params["DelaySeconds"] = countdown  # Default Queue
+        else:
+            message_params["MessageGroupId"] = self.message_group_id  # FIFO
+
+        try:
+            response = sqs_client.send_message(**message_params)
             return response["MessageId"]
         except ClientError as err:
             data_exception = {
