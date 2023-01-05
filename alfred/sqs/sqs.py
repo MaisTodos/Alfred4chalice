@@ -34,6 +34,7 @@ class SQSTask:
         dead_retry=False,
         once_time=None,
         fail_silently=False,
+        message_group_id=None,
     ):
         self.dead_retry = dead_retry
         self.retries = retries
@@ -41,6 +42,7 @@ class SQSTask:
         self.queue_url = queue_url or DEFAULT_QUEUE_URL
         self.once_time = once_time
         self.fail_silently = fail_silently
+        self.message_group_id = message_group_id
 
     def __call__(self, func):
         self.func = func
@@ -57,14 +59,23 @@ class SQSTask:
 
         queue_url = queue_url or self.queue_url
         try:
-            response = sqs_client.send_message(
-                QueueUrl=queue_url, DelaySeconds=countdown, MessageBody=json.dumps(body)
-            )
+            if not self.message_group_id:
+                response = sqs_client.send_message(
+                    QueueUrl=queue_url,
+                    DelaySeconds=countdown,
+                    MessageBody=json.dumps(body),
+                )
+            else:
+                response = sqs_client.send_message(
+                    QueueUrl=queue_url,
+                    MessageBody=json.dumps(body),
+                    MessageGroupId=self.message_group_id,
+                )
+
             return response["MessageId"]
         except ClientError as err:
             data_exception = {
                 "err": str(err),
-                # "body": str(body),
                 "queue_url": queue_url,
                 "aws_access_key_id": AWS_ACCESS_KEY_ID,
                 "aws_secret_access_key": AWS_SECRET_ACCESS_KEY,
