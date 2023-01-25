@@ -74,8 +74,7 @@ class SQSTask:
             data_exception = {
                 "err": str(err),
                 "queue_url": queue_url,
-                "aws_access_key_id": AWS_ACCESS_KEY_ID,
-                "aws_secret_access_key": AWS_SECRET_ACCESS_KEY,
+                "response": err.response
             }
             sentry_sdk.capture_message(str(data_exception))
 
