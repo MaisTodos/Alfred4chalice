@@ -5,9 +5,12 @@ import boto3
 from botocore.exceptions import ClientError
 
 from alfred.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, BUCKET_S3
+from botocore.config import Config
+
 
 s3_client = boto3.client(
     "s3",
+    config=Config(signature_version='s3v4'),
     aws_access_key_id=AWS_ACCESS_KEY_ID,
     aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
 )
