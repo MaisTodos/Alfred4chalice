@@ -14,20 +14,22 @@ class BirthDateField(fields.Date):
             - ((today.month, today.day) < (value.month, value.day))
         )
         if verify_age < self.min_age:
-            raise ValidationError(self.error_messages["birth_date_error_msg"])
+            raise ValidationError(self.error_messages["below_min_error_msg"])
 
         if verify_age > self.max_age:
-            raise ValidationError(self.error_messages["birth_date_error_msg"])
+            raise ValidationError(self.error_messages["above_max_error_msg"])
 
     def __init__(
         self,
         min_age,
         max_age,
-        birth_date_error_msg="Data de nascimento inválida",
+        above_max_error_msg="Data de nascimento inválida.",
+        below_min_error_msg="Usuário não possui idade mínima.",
         *args,
         **kwargs
     ):
         super().__init__(*args, **kwargs)
         self.min_age = min_age
         self.max_age = max_age
-        self.error_messages["birth_date_error_msg"] = birth_date_error_msg
+        self.error_messages["above_max_error_msg"] = above_max_error_msg
+        self.error_messages["below_min_error_msg"] = below_min_error_msg
