@@ -24,4 +24,3 @@ def test_birth_date_invalid_max_age_default_message():
         field._deserialize(birth_date, "birth_date", {"birth_date": birth_date})
 
     assert err.value.args[0] == "Data de nascimento inválida"
-

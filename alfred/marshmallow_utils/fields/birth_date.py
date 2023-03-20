@@ -1,6 +1,6 @@
-from marshmallow import ValidationError, fields
 from datetime import date
 
+from marshmallow import ValidationError, fields
 
 
 class BirthDateField(fields.Date):
@@ -15,7 +15,7 @@ class BirthDateField(fields.Date):
         )
         if verify_age < self.min_age:
             raise ValidationError(self.error_messages["birth_date_error_msg"])
-        
+
         if verify_age > self.max_age:
             raise ValidationError(self.error_messages["birth_date_error_msg"])
 
