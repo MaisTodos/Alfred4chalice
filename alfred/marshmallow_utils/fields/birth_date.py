@@ -23,7 +23,7 @@ class BirthDateField(fields.Date):
         self,
         min_age,
         max_age,
-        above_max_error_msg="Data de nascimento inválida.",
+        above_max_error_msg="Data de nascimento não permitida.",
         below_min_error_msg="Usuário não possui idade mínima.",
         *args,
         **kwargs

@@ -23,4 +23,4 @@ def test_birth_date_invalid_max_age_default_message():
     with pytest.raises(ValidationError) as err:
         field._deserialize(birth_date, "birth_date", {"birth_date": birth_date})
 
-    assert err.value.args[0] == "Data de nascimento inválida."
+    assert err.value.args[0] == "Data de nascimento não permitida."
