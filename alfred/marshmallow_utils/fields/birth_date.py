@@ -13,11 +13,14 @@ class BirthDateField(fields.Date):
             - value.year
             - ((today.month, today.day) < (value.month, value.day))
         )
+
         if verify_age < self.min_age:
             raise ValidationError(self.error_messages["below_min_error_msg"])
 
         if verify_age > self.max_age:
             raise ValidationError(self.error_messages["above_max_error_msg"])
+
+        return value
 
     def __init__(
         self,
