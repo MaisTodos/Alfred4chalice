@@ -16,6 +16,6 @@ class BRCompanyRegistryOrDocumentField(fields.String):
 
         return document
 
-    def __init__(self, document_error_msg="Documento inválido", *args, **kwargs):
+    def __init__(self, document_error_msg="Invalid Document", *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.error_messages["document_error_msg"] = document_error_msg
