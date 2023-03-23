@@ -1,7 +1,7 @@
 from marshmallow import ValidationError, fields
 
 
-class StringField(fields.String):
+class RequiredLengthStringField(fields.String):
     def _deserialize(self, value, attr, data, **kwargs):
         value = super()._deserialize(value, attr, data, **kwargs)
         min_length = 1
@@ -11,6 +11,9 @@ class StringField(fields.String):
 
         return value
 
-    def __init__(self, error_msg="Shorter than minimum length 1", *args, **kwargs):
+    def __init__(self, min_length=1, error_msg=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.error_messages["document_error_msg"] = error_msg
+        self.min_length = min_length
+        self.error_messages["document_error_msg"] = (
+            error_msg or f"Shorter than minimum length {min_length}"
+        )
