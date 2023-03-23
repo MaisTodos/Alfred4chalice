@@ -6,11 +6,11 @@ from alfred.marshmallow_utils.fields.required_length_string import (
 )
 
 
-def test_string_field_is_subclass():
+def test_required_length_string_is_subclass():
     assert issubclass(RequiredLengthStringField, fields.String)
 
 
-def test_string_field_invalid_default_message():
+def test_required_length_string_invalid_default_message():
     name = ""
     field = RequiredLengthStringField()
 
@@ -20,10 +20,10 @@ def test_string_field_invalid_default_message():
     assert err.value.args[0] == "Shorter than minimum length 1"
 
 
-def test_string_field_invalid_custom_message():
+def test_required_length_string_invalid_custom_message():
     err_msg = "Necessário no minimo 1 caracter"
     name = ""
-    field = RequiredLengthStringField(error_msg=err_msg)
+    field = RequiredLengthStringField(length_error_msg=err_msg)
 
     with pytest.raises(ValidationError) as err:
         field._deserialize(name, "name", {"name": name})
@@ -31,7 +31,7 @@ def test_string_field_invalid_custom_message():
     assert err.value.args[0] == err_msg
 
 
-def test_string_field_invalid_min_value():
+def test_required_length_string_invalid_min_value():
     name = ""
     field = RequiredLengthStringField(min_length=2)
 
@@ -41,7 +41,7 @@ def test_string_field_invalid_min_value():
     assert err.value.args[0] == "Shorter than minimum length 2"
 
 
-def test_string_field_valid():
+def test_required_length_string_valid():
     field = RequiredLengthStringField()
     name = "A"
 
