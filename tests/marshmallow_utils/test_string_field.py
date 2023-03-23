@@ -1,16 +1,16 @@
 import pytest
 from marshmallow import ValidationError, fields
 
-from alfred.marshmallow_utils.fields.string_length_field import StringLengthField
+from alfred.marshmallow_utils.fields.string_field import StringField
 
 
 def test_string_field_is_subclass():
-    assert issubclass(StringLengthField, fields.String)
+    assert issubclass(StringField, fields.String)
 
 
 def test_string_field_invalid_default_message():
     name = ""
-    field = StringLengthField()
+    field = StringField()
 
     with pytest.raises(ValidationError) as err:
         field._deserialize(name, "name", {"name": name})
@@ -21,7 +21,7 @@ def test_string_field_invalid_default_message():
 def test_string_field_invalid_custom_message():
     err_msg = "Necessário no minimo 1 caracter"
     name = ""
-    field = StringLengthField(error_msg=err_msg)
+    field = StringField(error_msg=err_msg)
 
     with pytest.raises(ValidationError) as err:
         field._deserialize(name, "name", {"name": name})
@@ -30,7 +30,7 @@ def test_string_field_invalid_custom_message():
 
 
 def test_string_field_valid():
-    field = StringLengthField()
+    field = StringField()
     name = "A"
 
     value = field._deserialize(name, "name", {"name": name})
