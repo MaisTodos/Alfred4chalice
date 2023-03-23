@@ -17,7 +17,7 @@ def test_br_company_registry_or_document_invalid_default_message():
     with pytest.raises(ValidationError) as err:
         field._deserialize(document, "document", {"document": document})
 
-    assert err.value.args[0] == "Documento inválido"
+    assert err.value.args[0] == "Invalid Document"
 
 
 def test_br_company_registry_or_document_invalid_custom_message():
