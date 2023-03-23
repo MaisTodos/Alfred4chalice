@@ -1,7 +1,7 @@
 from marshmallow import ValidationError, fields
 
 
-class StringField(fields.String):
+class StringLengthField(fields.String):
     def _deserialize(self, value, attr, data, **kwargs):
         value = super()._deserialize(value, attr, data, **kwargs)
         min_length = 1
